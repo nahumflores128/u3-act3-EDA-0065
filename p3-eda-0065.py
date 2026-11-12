@@ -15,19 +15,143 @@ empleados = {
     'desempeno': [80, 95, 85, 98, 90, 88]
 }
 
-print("EDA Analisis Exploratorio de Datos")
-print("EDA, Exploratory Data Analysis por Nahum Flores NC 0065")
+print("Análisis Exploratorio de Datos EDA")
+print("Exploratory Data Analysis por Nahum Flores NC 0065")
 print("Crear el diccionario con 10 listas y 6 elementos")
+
 # 2. Convertir diccionario en DataFrame
 df = pd.DataFrame(empleados)
 print("\n--- TABLA ORIGINAL DE EMPLEADOS ---")
 print(df)
 
 # 3. Exportar los datos a CSV
-print("-+-+-+  Convertir el DataFrame en archivo CSV -+-+-+-+")
+print("-+-+-+-+-+-Convertir el DataFrame en archivo CSV +-+-+-+-+-")
 df.to_csv(
-    'empleados_industria.csv',
+    'empleados_industria_0065.csv',
     index=False,
     encoding='utf-8-sig'
 )
-print("\n✅ Archivo CSV creado correctamente")
+print("\n Archivo CSV creado correctamente")
+print("8.-+-+-+-+- leer los datos desde elarchivo csv -+-+-+-+-+-")
+print('empleados_industria_0065.csv')
+
+# 4. Leer el archivo CSV
+df = pd.read_csv('empleados_industria_0065.csv')
+print("\n--- DATOS LEÍDOS DESDE CSV ---")
+print(df)
+print("+-+-+-+-+-+ 9. Análisis Exploratorio de Datos (EDA)-+-+-+-+-+")
+
+# 5. Primeros y últimos registros
+print("\n1. PRIMEROS REGISTROS (Head):")
+print(df.head(3)) # Muestra los primeros 3
+print("\n2. ÚLTIMOS REGISTROS (Tail):")
+print(df.tail(2)) # Muestra los últimos 2
+
+# 6. Dimensiones y estructura
+print("+-+-+-+-+-+ 6. Dimensiones y estructura-+-+-+-+-+")
+print(df) # mostrar tablas matriz
+print("\n3. DIMENSIONES (Filas, Columnas):", df.shape)
+print("\n4. NOMBRES DE COLUMNAS:\n", df.columns)
+print("\n5. TIPOS DE DATOS:\n", df.dtypes)
+
+# 7. Estadísticas y limpieza
+print("-+-+-+-+-+-  Estadísticas y limpieza -+-+-+--+-+")
+print("\n7. ESTADÍSTICAS DESCRIPTIVAS:")
+print(df.describe())
+print("\n8. VALORES FALTANTES (Nulls):")
+print(df.isnull().sum())
+print("\n9. REGISTROS DUPLICADOS:")
+print(df.duplicated().sum())
+print("\n10. VALORES ÚNICOS POR COLUMNA:")
+print(df.nunique())
+print("Departamentos únicos:", df['departamento'].unique())
+
+# 8. Análisis específico
+print(df)
+print("---------------------------------------------------------------")
+print("\n11. EMPLEADOS POR DEPARTAMENTO:")
+print(df['departamento'].value_counts())
+
+print("\n12. PROMEDIO DE SALARIO: $", df['salario'].mean())
+print("13. SALARIO MÁXIMO: $", df['salario'].max())
+print("14. SALARIO MÍNIMO: $", df['salario'].min())
+
+# 9. Ordenamiento, filtrado y agrupación
+print("9. Ordenamiento, filtrado y agrupación")
+print("\n15. EMPLEADOS ORDENADOS POR SALARIO (Mayor a menor):")
+print(df.sort_values(by='salario', ascending=False))
+
+print("\n16. EMPLEADOS CON SALARIO MAYOR A $15,000:")
+filtro = df[df['salario'] > 15000]
+print(filtro)
+
+print("\n17. RESUMEN POR DEPARTAMENTO:")
+resumen = df.groupby('departamento').agg(
+    empleados=('id_empleado', 'count'),
+    salario_promedio=('salario', 'mean'),
+    salario_maximo=('salario', 'max')
+)
+print(resumen)
+
+# 18. Gráfica de barras: Empleados por departamento
+print(" 18. Gráfica de barras: Empleados por departamento")
+conteo = df['departamento'].value_counts()
+plt.figure(figsize=(8, 5))
+plt.bar(conteo.index, conteo.values, color='skyblue')
+plt.title('Empleados por departamento Nahum flores 0065')
+plt.xlabel('Departamento')
+plt.ylabel('Cantidad de empleados')
+plt.grid(axis='y', linestyle='--', alpha=0.7)
+plt.tight_layout()
+plt.show()
+
+# 19. Gráfica de barras: Salarios por empleado
+plt.figure(figsize=(8, 5))
+plt.bar(df['nombre'], df['salario'], color='lightgreen')
+plt.title('Salario mensual por empleado Nahum Flores Nahum')
+plt.xlabel('Empleado')
+plt.ylabel('Salario en pesos')
+plt.grid(axis='y', linestyle='--', alpha=0.7)
+plt.tight_layout()
+plt.show()
+# 20. Histograma: Distribución de edades
+plt.figure(figsize=(8, 5))
+plt.hist(df['edad'], bins=5, color='orange', edgecolor='black')
+plt.title('Distribución de edades de empleados Nahum Flores NC 0065')
+plt.xlabel('Edad')
+plt.ylabel('Frecuencia')
+plt.grid(axis='y', linestyle='--', alpha=0.7)
+plt.tight_layout()
+plt.show()
+# 21. Gráfica de dispersión: Edad vs Salario
+plt.figure(figsize=(8, 5))
+plt.scatter(df['edad'], df['salario'], color='red', s=100)
+plt.title('Relación entre edad y salario nahum flores 0065')
+plt.xlabel('Edad')
+plt.ylabel('Salario mensual')
+plt.grid(True, linestyle='--', alpha=0.7)
+plt.tight_layout()
+plt.show()
+
+# 22. Diagrama de caja: Distribución de salarios
+plt.figure(figsize=(7, 5))
+plt.boxplot(df['salario'], patch_artist=True, boxprops=dict(facecolor='lightblue'))
+plt.title('Distribución de salarios (Boxplot) EDA nahum flores 0065 ')
+plt.ylabel('Salario mensual')
+plt.grid(axis='y', linestyle='--', alpha=0.7)
+plt.tight_layout()
+plt.show()
+
+# 23. Matriz de correlación
+correlacion = df.corr(numeric_only=True)
+print("\n--- MATRIZ DE CORRELACIÓN ---")
+print(correlacion)
+
+plt.figure(figsize=(9, 6))
+plt.imshow(correlacion, cmap='coolwarm', vmin=-1, vmax=1)
+plt.colorbar()
+plt.xticks(range(len(correlacion.columns)), correlacion.columns, rotation=45)
+plt.yticks(range(len(correlacion.columns)), correlacion.columns)
+plt.title('Matriz de correlación de variables numéricas EDA nahum flores 0065')
+plt.tight_layout()
+plt.show()
